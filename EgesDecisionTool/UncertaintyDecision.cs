@@ -6,16 +6,9 @@ using System.Threading.Tasks;
 
 namespace EgesDecisionTool
 {
-    public class Approaches
+    public class UncertaintyDecision
     {
-        public int[,] matrix = new int[3, 3]
-        {
-            {-15000, 1000, 65000},
-            {-12500 ,2700 ,63500},
-            {0 ,0 ,0}
-        };
-
-        public int[] PessimisticApproach() //kötümser (maximin)
+        public int[] FindMin(int[,] matrix) //kötümser (maximin) temeli
         {
             int[] minValuesOfEachRow = new int[matrix.GetLength(0)];
 
@@ -28,7 +21,7 @@ namespace EgesDecisionTool
             return minValuesOfEachRow;
         }
 
-        public int[] OptimisticApproach() //iyimser (maximax)
+        public int[] FindMax(int[,] matrix) //iyimser (maximax) temeli
         {
             int[] maxValuesOfEachRow = new int[matrix.GetLength(0)];
 
@@ -40,11 +33,11 @@ namespace EgesDecisionTool
             return maxValuesOfEachRow;
         }
 
-        public float[] RealismHurwiczApproach(float alpha) //0 <= x <= 1
+        public float[] RealismHurwicz(int[,] matrix, float alpha) //0 <= x <= 1
         {
             float[] solutionOfEachRow = new float[matrix.GetLength(0)];
-            int[] maxValues = OptimisticApproach();
-            int[] minValues = PessimisticApproach();
+            int[] maxValues = FindMax(matrix);
+            int[] minValues = FindMin(matrix);
 
             for (int i = 0; i < matrix.GetLength(0); i++)
             {
@@ -54,9 +47,37 @@ namespace EgesDecisionTool
             return solutionOfEachRow;
         }
 
-        public void Savage()
+        public int[,] ConvertLossMatrix(int[,] matrix) //minimax temeli
         {
+            int[,] lossMatrix = new int[matrix.GetLength(0), matrix.GetLength(1)];
 
+            for (int i = 0; i < matrix.GetLength(1); i++)
+            {
+                int maxValue = GetCol(matrix, i).Max();
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                {
+                    lossMatrix[j,i] = maxValue - matrix[j, i];
+                }
+            }
+            return lossMatrix;
+        }
+
+        public int Savage(int[,] matrix)
+        {
+            return FindMax(ConvertLossMatrix(matrix)).Min();
+        }
+
+        public float[] EqualLikelihood(int[,] matrix) //laplace
+        {
+            float[] expectedValuesOfEachRow = new float[matrix.GetLength(0)];
+            float n = matrix.GetLength(1); //n = sütun sayısı
+
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                expectedValuesOfEachRow[i] = (1 / n) * GetRow(matrix, i).Sum();
+                //Console.WriteLine(expectedValuesOfEachRow[i]);
+            }
+            return expectedValuesOfEachRow;
         }
 
         public int[] GetRow(int[,] matrix, int whichRow) // satır uzunluğunu bulmak için sütun sayısına baktım.
