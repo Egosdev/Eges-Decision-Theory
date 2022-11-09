@@ -15,18 +15,20 @@ namespace EgesDecisionTool
             {0 ,0 ,0}
         };
 
-        public void PessimisticApproach()
+        public int[] PessimisticApproach() //kötümser (maximin)
         {
             int[] minValuesOfEachRow = new int[matrix.GetLength(0)];
 
             for (int i = 0; i < matrix.GetLength(0); i++)
             {
                 minValuesOfEachRow[i] = GetRow(matrix, i).Min();
+                //Console.WriteLine(GetRow(matrix, i).Min());
+
             }
-            Console.WriteLine("Pessimistic: " + minValuesOfEachRow.Max().ToString());
+            return minValuesOfEachRow;
         }
 
-        public void OptimisticApproach()
+        public int[] OptimisticApproach() //iyimser (maximax)
         {
             int[] maxValuesOfEachRow = new int[matrix.GetLength(0)];
 
@@ -35,15 +37,44 @@ namespace EgesDecisionTool
                 maxValuesOfEachRow[i] = GetRow(matrix, i).Max();
                 //Console.WriteLine(GetRow(matrix, i).Max());
             }
-            Console.WriteLine("Optimistic: " + maxValuesOfEachRow.Max().ToString());
+            return maxValuesOfEachRow;
         }
 
-        public int[] GetRow(int[,] matrix, int whichRow)
+        public float[] RealismHurwiczApproach(float alpha) //0 <= x <= 1
+        {
+            float[] solutionOfEachRow = new float[matrix.GetLength(0)];
+            int[] maxValues = OptimisticApproach();
+            int[] minValues = PessimisticApproach();
+
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                solutionOfEachRow[i] = (alpha * maxValues[i]) + ((1 - alpha) * minValues[i]);
+                //Console.WriteLine(solutionOfEachRow[i]);
+            }
+            return solutionOfEachRow;
+        }
+
+        public void Savage()
+        {
+
+        }
+
+        public int[] GetRow(int[,] matrix, int whichRow) // satır uzunluğunu bulmak için sütun sayısına baktım.
         {
             int[] vector = new int[matrix.GetLength(1)];
             for (int i = 0; i < matrix.GetLength(1); i++)
             {
                 vector[i] = matrix[whichRow, i];
+            }
+            return vector;
+        }
+
+        public int[] GetCol(int[,] matrix, int whichCol)
+        {
+            int[] vector = new int[matrix.GetLength(0)];
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                vector[i] = matrix[i, whichCol];
             }
             return vector;
         }
