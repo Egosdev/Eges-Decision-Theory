@@ -21,16 +21,12 @@ namespace EgesDecisionTool
         public Form1()
         {
             InitializeComponent();
-            dataGridView1.Rows.Add(3);
-            dataGridView1.Columns.Add("asd","s1");
-            dataGridView1.Columns.Add("asd","s2");
-            dataGridView1.Columns.Add("asd","s3");
-            DataGridViewSettings(dataGridView1);
+            DataGridViewSettings(dgw_uncertainty);
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            var calc = new UncertaintyDecision();
+            //var calc = new UncertaintyDecision();
             //Console.WriteLine("Pessimistic (maximin): " + calc.FindMin(matrix).Max().ToString());
             //Console.WriteLine("Optimistic (maximax): " + calc.FindMax(matrix).Max().ToString());
             //Console.WriteLine("Realism (Hurwicz): " + calc.RealismHurwicz(matrix, 0.6f).Max().ToString());
@@ -47,6 +43,7 @@ namespace EgesDecisionTool
         private void DataGridViewSettings(DataGridView dataGridView)
         {
             dataGridView.RowHeadersVisible = false;
+            dataGridView.Columns[0].ReadOnly = true;
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -56,15 +53,20 @@ namespace EgesDecisionTool
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var calc = new UncertaintyDecision();
+            Approaches calc = new Approaches();
 
             FillMatrix();
 
-            Console.WriteLine("Pessimistic (maximin): " + calc.FindMin(matrix3).Max().ToString());
-            Console.WriteLine("Optimistic (maximax): " + calc.FindMax(matrix3).Max().ToString());
-            Console.WriteLine("Realism (Hurwicz): " + calc.RealismHurwicz(matrix3, 0.6f).Max().ToString());
-            Console.WriteLine("Savage (minimax): " + calc.Savage(matrix3).ToString());
-            Console.WriteLine("Equal Likelihood (Laplace) : " + calc.EqualLikelihood(matrix3).Max().ToString());
+            if (cbx_pessimistic.Checked)
+                calc.PessimisticApproach(matrix3, dgw_uncertainty);
+            //if (cbx_optimistic.Checked)
+            //    Console.WriteLine("Optimistic (maximax): " + calc.FindMax(matrix3).Max().ToString());
+            //if (cbx_realism.Checked)
+            //    Console.WriteLine("Realism (Hurwicz): " + calc.RealismHurwicz(matrix3, 0.6f).Max().ToString());
+            //if (cbx_savage.Checked)
+            //    Console.WriteLine("Savage (minimax): " + calc.Savage(matrix3).ToString());
+            //if (cbx_equallikelihood.Checked)
+            //    Console.WriteLine("Equal Likelihood (Laplace) : " + calc.EqualLikelihood(matrix3).Max().ToString());
         }
 
         private void FillMatrix()
@@ -74,7 +76,7 @@ namespace EgesDecisionTool
                 for (int j = 1; j < 4; j++)
                 {
                     //Console.WriteLine(dataGridView1.Rows[i].Cells[j].Value.ToString());
-                    matrix3[i, j-1] = Convert.ToInt32(dataGridView1.Rows[i].Cells[j].Value);
+                    matrix3[i, j - 1] = Convert.ToInt32(dgw_uncertainty.Rows[i].Cells[j].Value);
                 }
             }
         }
@@ -87,6 +89,67 @@ namespace EgesDecisionTool
         private void groupBox1_Enter(object sender, EventArgs e)
         {
 
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tbx_alpha_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            tbx_alpha.MaxLength = 2;
+            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
+        }
+
+        private void btn_add_alternative_Click(object sender, EventArgs e)
+        {
+            if (tbx_add_alternative.Text.Length == 0)
+                dgw_uncertainty.Rows.Add("a" + (dgw_uncertainty.RowCount + 1));
+            else
+                dgw_uncertainty.Rows.Add(tbx_add_alternative.Text);
+            tbx_add_alternative.Text = null;
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            if (tbx_add_natural_state.Text.Length == 0)
+                dgw_uncertainty.Columns.Add("s" + (dgw_uncertainty.ColumnCount), "s" + (dgw_uncertainty.ColumnCount));
+            else
+                dgw_uncertainty.Columns.Add("s" + (dgw_uncertainty.ColumnCount), tbx_add_natural_state.Text);
+            tbx_add_natural_state.Text = null;
+        }
+
+        private void button1_Click_2(object sender, EventArgs e)
+        {
+            dgw_uncertainty.Rows.Clear();
+            dgw_uncertainty.Columns.Clear();
+            dgw_uncertainty.Columns.Add("Alternatives", "Stratejiler");
+        }
+
+        private void btn_meatball_device_Click(object sender, EventArgs e)
+        {
+            PrepareMeatballTable();
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 1; j < 4; j++)
+                {
+                    dgw_uncertainty.Rows[i].Cells[j].Value = matrix[i, j - 1];
+                }
+            }
+        }
+
+        private void PrepareMeatballTable()
+        {
+            dgw_uncertainty.Rows.Clear();
+            dgw_uncertainty.Columns.Clear();
+            dgw_uncertainty.Columns.Add("Alternatives", "Stratejiler");
+
+            for (int i = 0; i < 3; i++)
+            {
+                dgw_uncertainty.Columns.Add("s" + (dgw_uncertainty.ColumnCount), "s" + (dgw_uncertainty.ColumnCount));
+                dgw_uncertainty.Rows.Add("a" + (dgw_uncertainty.RowCount + 1));
+            }
         }
     }
 }

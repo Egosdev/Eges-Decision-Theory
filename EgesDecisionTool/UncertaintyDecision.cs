@@ -8,7 +8,7 @@ namespace EgesDecisionTool
 {
     public class UncertaintyDecision
     {
-        public int[] FindMin(int[,] matrix) //kötümser (maximin) temeli
+        protected int[] FindMin(int[,] matrix) //kötümser (maximin) temeli
         {
             int[] minValuesOfEachRow = new int[matrix.GetLength(0)];
 
@@ -21,7 +21,7 @@ namespace EgesDecisionTool
             return minValuesOfEachRow;
         }
 
-        public int[] FindMax(int[,] matrix) //iyimser (maximax) temeli
+        protected int[] FindMax(int[,] matrix) //iyimser (maximax) temeli
         {
             int[] maxValuesOfEachRow = new int[matrix.GetLength(0)];
 
@@ -33,7 +33,7 @@ namespace EgesDecisionTool
             return maxValuesOfEachRow;
         }
 
-        public float[] RealismHurwicz(int[,] matrix, float alpha) //0 <= x <= 1
+        protected float[] RealismHurwicz(int[,] matrix, float alpha) //0 <= x <= 1
         {
             float[] solutionOfEachRow = new float[matrix.GetLength(0)];
             int[] maxValues = FindMax(matrix);
@@ -47,7 +47,7 @@ namespace EgesDecisionTool
             return solutionOfEachRow;
         }
 
-        public int[,] ConvertLossMatrix(int[,] matrix) //minimax temeli
+        protected int[,] ConvertLossMatrix(int[,] matrix) //minimax temeli
         {
             int[,] lossMatrix = new int[matrix.GetLength(0), matrix.GetLength(1)];
 
@@ -62,12 +62,12 @@ namespace EgesDecisionTool
             return lossMatrix;
         }
 
-        public int Savage(int[,] matrix)
+        protected int Savage(int[,] matrix)
         {
             return FindMax(ConvertLossMatrix(matrix)).Min();
         }
 
-        public float[] EqualLikelihood(int[,] matrix) //laplace
+        protected float[] EqualLikelihood(int[,] matrix) //laplace
         {
             float[] expectedValuesOfEachRow = new float[matrix.GetLength(0)];
             float n = matrix.GetLength(1); //n = sütun sayısı
@@ -80,7 +80,7 @@ namespace EgesDecisionTool
             return expectedValuesOfEachRow;
         }
 
-        public int[] GetRow(int[,] matrix, int whichRow) // satır uzunluğunu bulmak için sütun sayısına baktım.
+        protected int[] GetRow(int[,] matrix, int whichRow) // satır uzunluğunu bulmak için sütun sayısına baktım.
         {
             int[] vector = new int[matrix.GetLength(1)];
             for (int i = 0; i < matrix.GetLength(1); i++)
@@ -90,7 +90,7 @@ namespace EgesDecisionTool
             return vector;
         }
 
-        public int[] GetCol(int[,] matrix, int whichCol)
+        protected int[] GetCol(int[,] matrix, int whichCol)
         {
             int[] vector = new int[matrix.GetLength(0)];
             for (int i = 0; i < matrix.GetLength(0); i++)
