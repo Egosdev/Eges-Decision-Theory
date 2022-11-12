@@ -62,15 +62,10 @@ namespace EgesDecisionTool
             return lossMatrix;
         }
 
-        protected int Savage(int[,] matrix)
-        {
-            return FindMax(ConvertLossMatrix(matrix)).Min();
-        }
-
-        protected float[] EqualLikelihood(int[,] matrix) //laplace
+        protected float[] EqualLikelihood(int[,] matrix, int colCount) //laplace
         {
             float[] expectedValuesOfEachRow = new float[matrix.GetLength(0)];
-            float n = matrix.GetLength(1); //n = sütun sayısı
+            float n = colCount-1; //n = sütun sayısı
 
             for (int i = 0; i < matrix.GetLength(0); i++)
             {
@@ -98,6 +93,15 @@ namespace EgesDecisionTool
                 vector[i] = matrix[i, whichCol];
             }
             return vector;
+        }
+
+        public void Example(int[,] matrix)
+        {
+            Console.WriteLine("Pessimistic (maximin): " + FindMin(matrix).Max().ToString());
+            Console.WriteLine("Optimistic (maximax): " + FindMax(matrix).Max().ToString());
+            Console.WriteLine("Realism (Hurwicz): " + RealismHurwicz(matrix, 0.6f).Max().ToString());
+            Console.WriteLine("Savage (minimax): " + FindMax(ConvertLossMatrix(matrix)).Min().ToString());
+            Console.WriteLine("Equal Likelihood (Laplace) : " + EqualLikelihood(matrix,5).Max().ToString());
         }
     }
 }
