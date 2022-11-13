@@ -42,6 +42,7 @@ namespace EgesDecisionTool
         {
             dataGridView.RowHeadersVisible = false;
             dataGridView.Columns[0].ReadOnly = true;
+            dataGridView.Columns[0].DefaultCellStyle.SelectionBackColor = Color.Gray;
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -162,6 +163,7 @@ namespace EgesDecisionTool
             dgw_uncertainty.Columns.Clear();
             dgw_uncertainty.Columns.Add("Alternatives", "Stratejiler");
             dgw_uncertainty.Columns[0].ReadOnly = true;
+            dgw_uncertainty.Columns[0].DefaultCellStyle.SelectionBackColor = Color.Gray;
             rowCount = 0;
             colCount = 1;
         }

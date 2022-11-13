@@ -15,8 +15,6 @@ namespace EgesDecisionTool
             for (int i = 0; i < matrix.GetLength(0); i++)
             {
                 minValuesOfEachRow[i] = GetRow(matrix, i).Min();
-                //Console.WriteLine(GetRow(matrix, i).Min());
-
             }
             return minValuesOfEachRow;
         }
@@ -28,7 +26,6 @@ namespace EgesDecisionTool
             for (int i = 0; i < matrix.GetLength(0); i++)
             {
                 maxValuesOfEachRow[i] = GetRow(matrix, i).Max();
-                //Console.WriteLine(GetRow(matrix, i).Max());
             }
             return maxValuesOfEachRow;
         }
@@ -77,8 +74,8 @@ namespace EgesDecisionTool
 
         protected int[] GetRow(int[,] matrix, int whichRow) // satır uzunluğunu bulmak için sütun sayısına baktım.
         {
-            int[] vector = new int[matrix.GetLength(1)];
-            for (int i = 0; i < matrix.GetLength(1); i++)
+            int[] vector = new int[matrix.GetLength(1)-1]; //şakasız 2 saat hata aradım aq ıuhoASFGHIOASHGKJL
+            for (int i = 0; i < matrix.GetLength(1)-1; i++)
             {
                 vector[i] = matrix[whichRow, i];
             }

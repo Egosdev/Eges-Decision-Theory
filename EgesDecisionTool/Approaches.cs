@@ -11,6 +11,8 @@ namespace EgesDecisionTool
         private void CreateApproachColumn<T>(string colName, string header, DataGridView dgw, T[] resultArray)
         {
             dgw.Columns.Add(colName, header);
+            dgw.Columns[colName].DefaultCellStyle.BackColor = Color.LightGray;
+            dgw.Columns[colName].DefaultCellStyle.SelectionBackColor = Color.Gray;
             dgw.Columns[colName].ReadOnly = true;
             for (int i = 0; i < dgw.RowCount; i++)
             {
